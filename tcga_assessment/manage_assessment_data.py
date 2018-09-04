@@ -1,5 +1,6 @@
 from __future__ import division
 import json
+import os
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
@@ -26,11 +27,11 @@ def generate_manifest(data_dir, cancer_types, participant):
 
     for cancer in cancer_types:
         if cancer == "UCEC":
-            participants = ['MutSig2CV', '2020plus', 'OncodriveFM', 'ActiveDriver', 'e-Driver', 'OncodriveCLUST', 'MuSiC']
+            participants = ['MutSig2CV.json', '2020plus.json', 'OncodriveFM.json', 'ActiveDriver.json', 'e-Driver.json', 'OncodriveCLUST.json', 'MuSiC.json']
         else :
-            participants = ['MutSig2CV', 'compositeDriver', '2020plus', 'OncodriveFM', 'ActiveDriver', 'e-Driver', 'OncodriveCLUST', 'MuSiC']
+            participants = ['MutSig2CV.json', 'compositeDriver.json', '2020plus.json', 'OncodriveFM.json', 'ActiveDriver.json', 'e-Driver.json', 'OncodriveCLUST.json', 'MuSiC.json']
 
-        participants.append(participant)
+        participants.append(participant + ".json")
 
         object = {
                     "id" : cancer,
@@ -42,6 +43,14 @@ def generate_manifest(data_dir, cancer_types, participant):
     with open(data_dir + "Manifest.json", 'w') as f:
         json.dump(info, f, sort_keys=True, indent=4, separators=(',', ': '))
 
+def add_new_tool_to_benchmark(data_dir, cancer_types, participant):
+
+    for cancer in cancer_types:
+
+        assessment_file = data_dir + cancer + "_" + participant + "_assessment.json"
+        new_location = data_dir + cancer + "/" + participant + ".json"
+
+        os.rename(assessment_file,new_location)
 
 if __name__ == '__main__':
 
