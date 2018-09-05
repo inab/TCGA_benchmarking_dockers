@@ -3,13 +3,6 @@ import json
 import os
 from argparse import ArgumentParser
 
-parser = ArgumentParser()
-parser.add_argument("-b", "--benchmark_data", help="dir where the manifest and the data for the benchmark are stored", required=True)
-parser.add_argument("-c", "--cancer_types", nargs='+', help="list of types of cancer selected by the user, separated by spaces", required=True)
-parser.add_argument("-p", "--participant_name", help="name of the tool used for prediction", required=True)
-
-args = parser.parse_args()
-
 def main(args):
 
     # input parameters
@@ -53,5 +46,13 @@ def add_new_tool_to_benchmark(data_dir, cancer_types, participant):
         os.rename(assessment_file,new_location)
 
 if __name__ == '__main__':
+
+    parser = ArgumentParser()
+    parser.add_argument("-b", "--benchmark_data", help="dir where the manifest and the data for the benchmark are stored", required=True)
+    parser.add_argument("-c", "--cancer_types", nargs='+', help="list of types of cancer selected by the user, separated by spaces", required=True)
+    parser.add_argument("-p", "--participant_name", help="name of the tool used for prediction", required=True)
+    parser.add_argument("-o", "--output", help="output directory where the manifest and output JSON files will be written", required=True)
+
+    args = parser.parse_args()
 
     main(args)
