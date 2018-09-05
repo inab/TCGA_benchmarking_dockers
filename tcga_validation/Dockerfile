@@ -8,4 +8,6 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt -c constraints.txt
+RUN pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt -c constraints.txt
+
+ENTRYPOINT ["python","validation.py"]
