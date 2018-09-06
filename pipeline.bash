@@ -83,7 +83,7 @@ EOF
 	docker run --rm -u $UID -v "${INPUTDIR}":/app/input:ro -v "${METRICS_DIR}":/app/metrics:ro -v "${RESDIRreal}":/app/results:rw tcga_metrics:"$TAG" \
 		-i /app/input/"${inputBasename}" -c $CANCER_TYPES -m /app/metrics/ -p "${PARTICIPANT}" -o /app/results/ && \
 	docker run --rm -u $UID -v "${ASSESSDIR}":/app/assess:ro -v "${RESDIRreal}":/app/results:rw tcga_assessment:"$TAG" \
-		-b /app/assess/ /app/results/ -o /app/results/ -c $CANCER_TYPES -p "${PARTICIPANT}"
+		-b /app/assess/ -p /app/results/ -o /app/results/
 
 
 	#Build de imagenes:
