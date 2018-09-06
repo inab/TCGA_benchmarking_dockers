@@ -13,7 +13,8 @@ case "$BASEDIR" in
 		;;
 esac
 
-TCGA_DIR="${BASEDIR}"/TCGA_visualizer_data
+TCGA_DIR="${BASEDIR}"/TCGA_full_data
+TAG=0.1
 
 if [ $# -gt 1 ] ; then 
 	input="$1"
@@ -62,16 +63,27 @@ EOF
 	echo "* Creating $RESDIR (if it does not exist)"
 	mkdir -p "$RESDIR"
 	
+	# REMEMBER: We need absolute paths for docker
+	RESDIRreal="$(realpath "$RESDIR")"
+	case "$RESDIRreal" in
+		/*)
+			true
+			;;
+		*)
+			RESDIRreal="${PWD}/$RESDIRreal"
+			;;
+	esac
+	
 	ASSESSDIR="${TCGA_DIR}"/data
 	METRICS_DIR="${TCGA_DIR}"/metrics_ref_datasets
 	PUBLIC_REF_DIR="${TCGA_DIR}"/public_ref
 
-	docker run --rm -u $UID -v "${INPUTDIR}":/app/input -v "${REFDIR}":/app/ref tcga_validation \
-		python validation.py -i /app/input/"${inputBasename}" -r /app/ref/ && \
-	docker run --rm -u $UID -v "${INPUTDIR}":/app/input -v "${METRICS_DIR}":/app/metrics -v "${RESDIR}":/app/results tcga_metrics \
-		python compute_metrics.py -i /app/input/ACC.txt -c $CANCER_TYPES -m /app/metrics/ -p "${PARTICIPANT}" -o /app/results/ && \
-	docker run --rm -u $UID -v "${ASSESSDIR}":/app/assess -v "${RESDIR}":/app/results tcga_assessment \
-		python manage_assessment_data.py -b /app/assess/ /app/results/ -o /app/results/ -c $CANCER_TYPES -p "${PARTICIPANT}"
+	docker run --rm -u $UID -v "${INPUTDIR}":/app/input:ro -v "${PUBLIC_REF_DIR}":/app/ref:ro tcga_validation:"$TAG" \
+		-i /app/input/"${inputBasename}" -r /app/ref/ && \
+	docker run --rm -u $UID -v "${INPUTDIR}":/app/input:ro -v "${METRICS_DIR}":/app/metrics:ro -v "${RESDIRreal}":/app/results:rw tcga_metrics:"$TAG" \
+		-i /app/input/"${inputBasename}" -c $CANCER_TYPES -m /app/metrics/ -p "${PARTICIPANT}" -o /app/results/ && \
+	docker run --rm -u $UID -v "${ASSESSDIR}":/app/assess:ro -v "${RESDIRreal}":/app/results:rw tcga_assessment:"$TAG" \
+		-b /app/assess/ /app/results/ -o /app/results/ -c $CANCER_TYPES -p "${PARTICIPANT}"
 
 
 	#Build de imagenes:
