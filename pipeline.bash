@@ -14,7 +14,7 @@ case "$BASEDIR" in
 esac
 
 TCGA_DIR="${BASEDIR}"/TCGA_full_data
-TAG=0.1
+TAG=0.3
 
 if [ $# -gt 1 ] ; then 
 	input="$1"

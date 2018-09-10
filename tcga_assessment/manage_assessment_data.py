@@ -6,7 +6,11 @@ import os
 import fnmatch
 from argparse import ArgumentParser
 
+import matplotlib
+matplotlib.use("SVG")
+
 import matplotlib.pyplot as plt
+plt.ioff()
 
 def main(args):
 
@@ -67,6 +71,9 @@ def generate_manifest(data_dir,output_dir, cancer_types):
             shutil.copy(abs_result_file,new_location)
             participants.append(rel_new_location)
         
+        # Let's draw the assessment chart!
+        print_chart(cancer_dir,participants,cancer)
+        
         obj = {
             "id" : cancer,
             "participants": participants
@@ -77,6 +84,7 @@ def generate_manifest(data_dir,output_dir, cancer_types):
     with io.open(os.path.join(output_dir, "Manifest.json"), mode='w', encoding="utf-8") as f:
         jdata = json.dumps(info, f, sort_keys=True, indent=4, separators=(',', ': '))
         f.write(unicode(jdata,"utf-8"))
+
 
 def pareto_frontier(Xs, Ys, maxX=True, maxY=True):
     # Sort the list in either ascending or descending order of X
@@ -96,15 +104,17 @@ def pareto_frontier(Xs, Ys, maxX=True, maxY=True):
     p_frontY = [pair[1] for pair in p_front]
     return p_frontX, p_frontY
 
-
-def print_chart(data_dir, participants_datasets, cancer_type):
+def print_chart(cancer_dir, participants, cancer_type):
     tools = []
     x_values = []
     y_values = []
-    for tool, metrics in participants_datasets.iteritems():
-        tools.append(tool)
-        x_values.append(metrics[0])
-        y_values.append(metrics[1])
+    for participant_file in participants:
+        abs_participant_file = os.path.join(cancer_dir,participant_file)
+        with io.open(abs_participant_file,mode='r',encoding="utf-8") as f:
+            result = json.load(f)
+            tools.append(result['toolname'])
+            x_values.append(result['x'])
+            y_values.append(result['y'])
 
     ax = plt.subplot()
     for i, val in enumerate(tools, 0):
@@ -185,7 +195,7 @@ def print_chart(data_dir, participants_datasets, cancer_type):
 
 
     # plt.show()
-    outname = data_dir + cancer_type + "/" + cancer_type + "_benchmark.svg"
+    outname = os.path.join(cancer_dir,cancer_type + "_benchmark.svg")
     fig = plt.gcf()
     fig.set_size_inches(18.5, 10.5)
     fig.savefig(outname, dpi=100)
