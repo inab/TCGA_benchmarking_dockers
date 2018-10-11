@@ -14,7 +14,7 @@ case "$BASEDIR" in
 esac
 
 TCGA_DIR="${BASEDIR}"/TCGA_full_data
-TAG=0.3
+TAG=0.3.1
 
 if [ $# -gt 1 ] ; then 
 	input="$1"
@@ -35,6 +35,7 @@ if [ $# -gt 1 ] ; then
 	fi
 	
 	cat <<EOF
+* Using version $TAG
 * Running parameters
 
   Input: $input
@@ -78,12 +79,16 @@ EOF
 	METRICS_DIR="${TCGA_DIR}"/metrics_ref_datasets
 	PUBLIC_REF_DIR="${TCGA_DIR}"/public_ref
 
+	echo "=> Validating input" && \
 	docker run --rm -u $UID -v "${INPUTDIR}":/app/input:ro -v "${PUBLIC_REF_DIR}":/app/ref:ro tcga_validation:"$TAG" \
 		-i /app/input/"${inputBasename}" -r /app/ref/ && \
+	echo "=> Computing metrics" && \
 	docker run --rm -u $UID -v "${INPUTDIR}":/app/input:ro -v "${METRICS_DIR}":/app/metrics:ro -v "${RESDIRreal}":/app/results:rw tcga_metrics:"$TAG" \
 		-i /app/input/"${inputBasename}" -c $CANCER_TYPES -m /app/metrics/ -p "${PARTICIPANT}" -o /app/results/ && \
+	echo "=> Assessing metrics" && \
 	docker run --rm -u $UID -v "${ASSESSDIR}":/app/assess:ro -v "${RESDIRreal}":/app/results:rw tcga_assessment:"$TAG" \
-		-b /app/assess/ -p /app/results/ -o /app/results/
+		-b /app/assess/ -p /app/results/ -o /app/results/ && \
+	echo "* Pipeline has finished properly"
 
 
 	#Build de imagenes:
@@ -92,5 +97,5 @@ EOF
 	#docker build -t tcga_metrics .
 	#docker build -t manage_assessment_data .
 else
-	echo "Usage: $0 input_file results_dir [participant_id [cancer_type]*]\n"
+	echo "Usage: $0 input_file results_dir [participant_id [cancer_type]*]"
 fi
