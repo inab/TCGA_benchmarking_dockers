@@ -59,7 +59,7 @@ def generate_manifest(data_dir,output_dir, cancer_types):
             
             # Gathering the public participants
             for public_participant in os.listdir(cancer_dir):
-		part_fullpath = os.path.join(cancer_dir,public_participant)
+                part_fullpath = os.path.join(cancer_dir,public_participant)
                 if fnmatch.fnmatch(public_participant,"*.json") and os.path.isfile(part_fullpath):
                     participants.append(public_participant)
             

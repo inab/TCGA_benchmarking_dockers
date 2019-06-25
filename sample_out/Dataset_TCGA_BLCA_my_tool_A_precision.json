@@ -1,0 +1,25 @@
+{
+    "_schema": "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Dataset",
+    "challenge_ids": [
+        "BLCA"
+    ],
+    "community_ids": "TCGA",
+    "datalink": {
+        "inline_data": {
+            "value": 0.23076923076923078
+        }
+    },
+    "depends_on": {
+        "metrics_id": "TCGA:precision",
+        "rel_dataset_ids": [
+            {
+                "dataset_id": "OEBD002XXXXXX"
+            },
+            {
+                "dataset_id": "OEBD002XXXXX1"
+            }
+        ],
+        "tool_id": "my_tool"
+    },
+    "type": "assessment"
+}

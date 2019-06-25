@@ -1,0 +1,24 @@
+{
+    "_schema": "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Dataset",
+    "challenge_ids": [
+        "ACC BRCA COAD"
+    ],
+    "community_ids": "TCGA",
+    "datalink": {
+        "attrs": [
+            "archive"
+        ],
+        "status": "ok",
+        "uri": "/app/input/example_input.txt",
+        "validation_date": "2019-06-25T11:16:02"
+    },
+    "depends_on": {
+        "rel_dataset_ids": [
+            {
+                "dataset_id": "OEBD002000000L"
+            }
+        ],
+        "tool_id": "my_tool"
+    },
+    "type": "participant"
+}
