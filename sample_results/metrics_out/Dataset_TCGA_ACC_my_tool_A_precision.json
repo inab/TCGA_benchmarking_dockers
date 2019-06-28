@@ -1,0 +1,12 @@
+{
+    "_id": "TCGA:ACC_precision_my_tool_A",
+    "challenge_id": "ACC",
+    "community_id": "TCGA",
+    "metrics": {
+        "metric_id": "precision",
+        "stderr": 0,
+        "value": 0.38461538461538464
+    },
+    "participant_id": "my_tool",
+    "type": "assessment"
+}

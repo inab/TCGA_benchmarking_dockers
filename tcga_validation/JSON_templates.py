@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 
 class data_model_templates():
@@ -27,7 +28,7 @@ class data_model_templates():
         return data
 
 
-    def write_assessment_datasets(self, ID, community, challenge, participant_name, metric, metric_value, error, visualization_mode):
+    def write_assessment_datasets(self, ID, community, challenge, participant_name, metric, metric_value, error):
 
         data = {
             "_id": ID,
@@ -36,8 +37,7 @@ class data_model_templates():
             "type": "assessment",
             "metrics": {"metric_id": metric,
                         "value": metric_value,
-                        "stderr": error,
-                        "visualization": visualization_mode
+                        "stderr": error
                         },
             "participant_id": participant_name
 

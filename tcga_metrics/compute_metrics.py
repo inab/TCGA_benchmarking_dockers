@@ -83,12 +83,10 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
         # get json assessment file for both metrics
         data_id_1 = community + ":" + cancer + "_TPR_" + participant + "_A"
         std_error= 0
-        TPR_visualization = "2D-plot-x-axis"
-        assessment_TPR = data_model_templates.write_assessment_datasets(data_id_1, community, cancer, participant, "TPR", TPR, std_error, TPR_visualization)
+        assessment_TPR = data_model_templates.write_assessment_datasets(data_id_1, community, cancer, participant, "TPR", TPR, std_error)
 
         data_id_2 = community + ":" + cancer + "_precision_" + participant + "_A"
-        precision_visualization = "2D-plot-y-axis"
-        assessment_precision = data_model_templates.write_assessment_datasets(data_id_2, community, cancer, participant, "precision", acc, std_error, precision_visualization)
+        assessment_precision = data_model_templates.write_assessment_datasets(data_id_2, community, cancer, participant, "precision", acc, std_error)
 
         with io.open(os.path.join(out_dir, "Dataset_" + community + "_" + cancer + "_" + participant + "_A_TPR.json"),
                      mode='w', encoding="utf-8") as f:

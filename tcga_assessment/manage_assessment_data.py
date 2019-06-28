@@ -24,67 +24,87 @@ def main(args):
     # Assuring the output directory does exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    
-    cancer_types_part = get_cancer_types(participant_dir)
-    generate_manifest(data_dir, output_dir, cancer_types_part)
-    
-"""
-	Gets the cancer types from the participant result files
-"""
-def get_cancer_types(participant_dir):
-    cancer_types = {}
-    
+    # read participant metrics
+    participant_data = read_participant_data(participant_dir)
+    generate_manifest(data_dir, output_dir, participant_data)
+
+
+def read_participant_data(participant_dir):
+    participant_data = {}
+
     for result_file in os.listdir(participant_dir):
         abs_result_file = os.path.join(participant_dir, result_file)
-        if fnmatch.fnmatch(result_file,"*.json") and os.path.isfile(abs_result_file):
-            with io.open(abs_result_file,mode='r',encoding="utf-8") as f:
+        if fnmatch.fnmatch(result_file, "*.json") and os.path.isfile(abs_result_file):
+            with io.open(abs_result_file, mode='r', encoding="utf-8") as f:
                 result = json.load(f)
-                cancer_types.setdefault(result['cancer_type'], []).append((result['toolname'],abs_result_file))
+                participant_data.setdefault(result['challenge_id'], []).append (abs_result_file)
 
-    return cancer_types
+    return participant_data
 
-def generate_manifest(data_dir,output_dir, cancer_types):
+def generate_manifest(data_dir,output_dir, participant_data):
 
     info = []
 
-    for cancer,cancer_participants in cancer_types.items():
+    for cancer, metrics_file in participant_data.items():
+
         cancer_dir = os.path.join(output_dir,cancer)
-        
-        participants = []
-        
-        cancer_data_dir = os.path.join(data_dir,cancer)
-        if os.path.isdir(cancer_data_dir):
-            # Transferring the public participants data
-            shutil.copytree(cancer_data_dir,cancer_dir)
-            
-            # Gathering the public participants
-            for public_participant in os.listdir(cancer_dir):
-                part_fullpath = os.path.join(cancer_dir,public_participant)
-                if fnmatch.fnmatch(public_participant,"*.json") and os.path.isfile(part_fullpath):
-                    participants.append(public_participant)
-            
-        # And now, the participants
-        # copytree should have created the directory ... if it run
         if not os.path.exists(cancer_dir):
             os.makedirs(cancer_dir)
-        for (participant,abs_result_file) in cancer_participants:
-            rel_new_location = participant + ".json"
-            new_location = os.path.join(cancer_dir, rel_new_location)
-            shutil.copy(abs_result_file,new_location)
-            participants.append(rel_new_location)
+        participants = []
         
+        cancer_oeb_data = os.path.join(data_dir, cancer+".json")
+
+        if os.path.isfile(cancer_oeb_data):
+            # Transferring the public participants data
+            with io.open(cancer_oeb_data, mode='r', encoding="utf-8") as f:
+                aggregation_file = json.load(f)
+                # get id for metrics in x and y axis
+                metric_X = aggregation_file["datalink"]["inline_data"]["visualization"]["x_axis"]
+                metric_Y = aggregation_file["datalink"]["inline_data"]["visualization"]["y_axis"]
+
+                # add new participant data to aggregation file
+                new_participant_data = {}
+                for ( abs_result_file) in metrics_file:
+                    with io.open(abs_result_file, mode='r', encoding="utf-8") as f:
+                        metrics_data = json.load(f)
+                        participant_id = metrics_data["participant_id"]
+                        if metrics_data["metrics"]["metric_id"] == metric_X:
+                            new_participant_data ["metric_x"] = metrics_data["metrics"]["value"]
+                        elif metrics_data["metrics"]["metric_id"] == metric_Y:
+                            new_participant_data ["metric_y"] = metrics_data["metrics"]["value"]
+
+                        # copy the assessment files to output directory
+                        rel_new_location = participant_id + ".json"
+                        new_location = os.path.join(cancer_dir, rel_new_location)
+                        shutil.copy(abs_result_file, new_location)
+
+                new_participant_data["participant_id"] = participant_id
+                aggregation_file["datalink"]["inline_data"]["challenge_participants"].append(new_participant_data)
+
+                # add the rest of participants to manifest
+                for name in aggregation_file["datalink"]["inline_data"]["challenge_participants"]:
+                    participants.append(name["participant_id"])
+
+                #copy the updated aggregation file to output directory
+                summary_dir = os.path.join(cancer_dir,cancer + "_summary.json")
+                with open(summary_dir, 'w') as f:
+                    json.dump(aggregation_file, f, sort_keys=True, indent=4, separators=(',', ': '))
+
+
+
         # Let's draw the assessment charts!
-        print_chart(cancer_dir,participants,cancer, "RAW")
-        print_chart(cancer_dir,participants,cancer, "SQR")
-        print_chart(cancer_dir,participants,cancer, "DIAG")
-        
+        print_chart(cancer_dir, summary_dir,cancer, "RAW")
+        print_chart(cancer_dir, summary_dir,cancer, "SQR")
+        print_chart(cancer_dir, summary_dir,cancer, "DIAG")
+
+        #generate manifest
         obj = {
             "id" : cancer,
             "participants": participants
         }
-        
+
         info.append(obj)
-    
+
     with io.open(os.path.join(output_dir, "Manifest.json"), mode='w', encoding="utf-8") as f:
         jdata = json.dumps(info, f, sort_keys=True, indent=4, separators=(',', ': '))
         f.write(unicode(jdata,"utf-8"))
@@ -287,17 +307,18 @@ def print_quartiles_table(tools_quartiles):
 
 
 
-def print_chart(cancer_dir, participants, cancer_type, classification_type):
+def print_chart(cancer_dir, summary_dir, cancer_type, classification_type):
+
     tools = []
     x_values = []
     y_values = []
-    for participant_file in participants:
-        abs_participant_file = os.path.join(cancer_dir,participant_file)
-        with io.open(abs_participant_file,mode='r',encoding="utf-8") as f:
-            result = json.load(f)
-            tools.append(result['toolname'])
-            x_values.append(result['x'])
-            y_values.append(result['y'])
+    with io.open(summary_dir, mode='r', encoding="utf-8") as f:
+        aggregation_file = json.load(f)
+        for participant_data in aggregation_file["datalink"]["inline_data"]["challenge_participants"]:
+
+            tools.append(participant_data['participant_id'])
+            x_values.append(participant_data['metric_x'])
+            y_values.append(participant_data['metric_y'])
 
     ax = plt.subplot()
     for i, val in enumerate(tools, 0):
