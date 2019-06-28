@@ -1,57 +1,47 @@
 import datetime
+import pytz
 
 
 class data_model_templates():
 
-    def write_participant_json(self, community, challenges, participant_name, file_path, input_dataset):
+    def write_participant_json(self, ID, community, challenges, participant_name, validated):
+
+        if validated == True:
+            status = "ok"
+        else:
+            status = "corrupted"
 
         data = {
+            "_id":ID,
+            "community_id": community,
+            "challenge_ids": challenges,
+            "type": "participant",
             "datalink": {
-                "uri": file_path,
                 "attrs": ["archive"],
                 "validation_date": str(datetime.datetime.now().replace(microsecond=0).isoformat()),
-                "status": "ok"
+                "status": status
             },
-            "type": "participant",
-            "_schema": "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Dataset",
-            "community_ids": community,
-            "challenge_ids": challenges,
-            "depends_on": {
-                "tool_id": participant_name,
-                "rel_dataset_ids": [
-                    {
-                        "dataset_id": input_dataset,
-                    }
-                ]
-            }
+            "participant_id": participant_name,
+
         }
 
         return data
 
 
-    def write_assessment_datasets(self, community, challenge, participant_name, metric, metric_value, participant_data_id, ref_data_id):
+    def write_assessment_datasets(self, ID, community, challenge, participant_name, metric, metric_value, error, visualization_mode):
 
         data = {
-
+            "_id": ID,
+            "community_id": community,
+            "challenge_id": challenge,
             "type": "assessment",
-            "datalink": {
-                "inline_data": {"value": metric_value}
-            },
-            "depends_on": {
-                "tool_id": participant_name,
-                "metrics_id": community + ":" + metric,
-                "rel_dataset_ids": [
-                    {
-                        "dataset_id": participant_data_id
-                    },
-                    {
-                        "dataset_id": ref_data_id
-                    }
-                ]
-            },
-            "_schema": "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Dataset",
-            "community_ids": community,
-            "challenge_ids": [challenge]
+            "metrics": {"metric_id": metric,
+                        "value": metric_value,
+                        "stderr": error,
+                        "visualization": visualization_mode
+                        },
+            "participant_id": participant_name
+
         }
 
         return data

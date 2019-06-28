@@ -1,0 +1,13 @@
+{
+    "_id": "TCGA:ACC_TPR_my_tool_A",
+    "challenge_id": "ACC",
+    "community_id": "TCGA",
+    "metrics": {
+        "metric_id": "TPR",
+        "stderr": 0,
+        "value": 0.8333333333333334,
+        "visualization": "2D-plot-x-axis"
+    },
+    "participant_id": "my_tool",
+    "type": "assessment"
+}

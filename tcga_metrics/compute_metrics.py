@@ -16,9 +16,6 @@ def main(args):
     cancer_types = args.cancer_types
     participant = args.participant_name
     community = args.community_name
-    event = args.benchmarking_event
-    participant_data_id = args.participant_data_id
-    ref_data_id = args.ref_data_id
     out_dir = args.output
     
     # Assuring the output directory does exist
@@ -27,13 +24,11 @@ def main(args):
 
     data_model_templates = JSON_templates.data_model_templates()
 
-    compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, event, participant_data_id,
-                    ref_data_id, out_dir, data_model_templates)
+    compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir, data_model_templates)
 
 
 
-def compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, event, participant_data_id,
-                    ref_data_id, out_dir, data_model_templates):
+def compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir, data_model_templates):
 
     # get participant dataset
     participant_data = pandas.read_csv(input_participant, sep='\t',
@@ -85,10 +80,15 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
 
         assessment_data = {'toolname': participant, 'x': TPR, 'y': acc, 'e': 0, 'cancer_type': cancer}
 
-        assessment_TPR = data_model_templates.write_assessment_datasets(community, cancer, participant, "TPR", TPR,
-                                  participant_data_id, ref_data_id)
-        assessment_precision = data_model_templates.write_assessment_datasets(community, cancer, participant, "precision", acc,
-                                                   participant_data_id, ref_data_id)
+        # get json assessment file for both metrics
+        data_id_1 = community + ":" + cancer + "_TPR_" + participant + "_A"
+        std_error= 0
+        TPR_visualization = "2D-plot-x-axis"
+        assessment_TPR = data_model_templates.write_assessment_datasets(data_id_1, community, cancer, participant, "TPR", TPR, std_error, TPR_visualization)
+
+        data_id_2 = community + ":" + cancer + "_precision_" + participant + "_A"
+        precision_visualization = "2D-plot-y-axis"
+        assessment_precision = data_model_templates.write_assessment_datasets(data_id_2, community, cancer, participant, "precision", acc, std_error, precision_visualization)
 
         with io.open(os.path.join(out_dir, "Dataset_" + community + "_" + cancer + "_" + participant + "_A_TPR.json"),
                      mode='w', encoding="utf-8") as f:
@@ -109,9 +109,6 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--metrics_ref", help="dir that contains metrics reference datasets for all cancer types", required=True)
     parser.add_argument("-p", "--participant_name", help="name of the tool used for prediction", required=True)
     parser.add_argument("-com", "--community_name", help="name/id of benchmarking community", required=True)
-    parser.add_argument("-be", "--benchmarking_event", help="event where the participant is benchmarked", required=True)
-    parser.add_argument("-pdID", "--participant_data_id", help="id of the participant data that will be assessed", required=True)
-    parser.add_argument("-rdID", "--ref_data_id", help="id of the reference data used for the assessment",required=True)
     parser.add_argument("-o", "--output", help="output directory where assessment JSON files will be written", required=True)
     
     args = parser.parse_args()

@@ -39,8 +39,8 @@ def get_cancer_types(participant_dir):
         if fnmatch.fnmatch(result_file,"*.json") and os.path.isfile(abs_result_file):
             with io.open(abs_result_file,mode='r',encoding="utf-8") as f:
                 result = json.load(f)
-                cancer_types.setdefault(result['cancer_type'],[]).append((result['toolname'],abs_result_file))
-    
+                cancer_types.setdefault(result['cancer_type'], []).append((result['toolname'],abs_result_file))
+
     return cancer_types
 
 def generate_manifest(data_dir,output_dir, cancer_types):
