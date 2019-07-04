@@ -73,7 +73,7 @@ def  validate_input_data(input_participant,  public_ref_dir, community, challeng
                 traceback.print_exc()
 
     data_id = community + ":" + participant_name + "_P"
-    output_json = data_model_templates.write_participant_json(data_id, community, challenges, participant_name, validated)
+    output_json = data_model_templates.write_participant_dataset(data_id, community, challenges, participant_name, validated)
 
     # print file
     output_file = os.path.join(out_dir, "Dataset_" + community + "_" + participant_name + "_P.json")
