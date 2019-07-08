@@ -22,13 +22,11 @@ def main(args):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    data_model_templates = JSON_templates.data_model_templates()
-
-    compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir, data_model_templates)
+    compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir)
 
 
 
-def compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir, data_model_templates):
+def compute_metrics(input_participant,  gold_standards_dir, cancer_types, participant, community, out_dir):
 
     # get participant dataset
     participant_data = pandas.read_csv(input_participant, sep='\t',
@@ -83,10 +81,10 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
         # get json assessment file for both metrics
         data_id_1 = community + ":" + cancer + "_TPR_" + participant + "_A"
         std_error= 0
-        assessment_TPR = data_model_templates.write_assessment_dataset(data_id_1, community, cancer, participant, "TPR", TPR, std_error)
+        assessment_TPR = JSON_templates.write_assessment_dataset(data_id_1, community, cancer, participant, "TPR", TPR, std_error)
 
         data_id_2 = community + ":" + cancer + "_precision_" + participant + "_A"
-        assessment_precision = data_model_templates.write_assessment_dataset(data_id_2, community, cancer, participant, "precision", acc, std_error)
+        assessment_precision = JSON_templates.write_assessment_dataset(data_id_2, community, cancer, participant, "precision", acc, std_error)
 
         with io.open(os.path.join(out_dir, "Dataset_" + community + "_" + cancer + "_" + participant + "_A_TPR.json"),
                      mode='w', encoding="utf-8") as f:

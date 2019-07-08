@@ -31,13 +31,11 @@ def main(args):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    data_model_templates = JSON_templates.data_model_templates()
-
-    validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_dir, data_model_templates)
+    validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_dir)
 
 
 
-def  validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_dir, data_model_templates):
+def  validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_dir):
     # get participant predicted genes
     try:
         participant_data = pandas.read_csv(input_participant, sep='\t',
@@ -73,7 +71,7 @@ def  validate_input_data(input_participant,  public_ref_dir, community, challeng
                 traceback.print_exc()
 
     data_id = community + ":" + participant_name + "_P"
-    output_json = data_model_templates.write_participant_dataset(data_id, community, challenges, participant_name, validated)
+    output_json = JSON_templates.write_participant_dataset(data_id, community, challenges, participant_name, validated)
 
     # print file
     output_file = os.path.join(out_dir, "Dataset_" + community + "_" + participant_name + "_P.json")
