@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import json
 import jsonschema
 import sys
@@ -51,7 +52,7 @@ def write_participant_dataset( ID, community, challenges, participant_name, vali
 
     # validate the generated object with the minimal JSON schema
 
-    with open('Benchmarking_minimal_datasets_schema.json', 'r') as f:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Benchmarking_minimal_datasets_schema.json'), 'r') as f:
         schema = json.load(f)
 
     try:
@@ -92,7 +93,7 @@ def write_assessment_dataset( ID, community, challenge, participant_name, metric
 
     # validate the generated object with the minimal JSON schema
 
-    with open('Benchmarking_minimal_datasets_schema.json', 'r') as f:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'Benchmarking_minimal_datasets_schema.json'), 'r') as f:
         schema = json.load(f)
 
     try:
