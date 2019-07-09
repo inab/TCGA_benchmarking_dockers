@@ -58,7 +58,9 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
 
         predicted_genes = filtered_data.iloc[:, 0].values
     
-    
+    # define array that will hold the full set of assessment datasets
+    ALL_ASSESSMENTS = []
+
     for cancer in cancer_types:
         # get metrics dataset
         metrics_data = pandas.read_csv(os.path.join(gold_standards_dir, cancer + ".txt"),
@@ -86,15 +88,14 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
         data_id_2 = community + ":" + cancer + "_precision_" + participant + "_A"
         assessment_precision = JSON_templates.write_assessment_dataset(data_id_2, community, cancer, participant, "precision", acc, std_error)
 
-        with io.open(os.path.join(out_dir, "Dataset_" + community + "_" + cancer + "_" + participant + "_A_TPR.json"),
-                     mode='w', encoding="utf-8") as f:
-            jdata = json.dumps(assessment_TPR, sort_keys=True, indent=4, separators=(',', ': '))
-            f.write(unicode(jdata,"utf-8"))
+        # push the two assessment datasets to the main dataset array
+        ALL_ASSESSMENTS.extend([assessment_TPR, assessment_precision])
 
-        with io.open(os.path.join(out_dir, "Dataset_" + community + "_" + cancer + "_" + participant + "_A_precision.json"),
-                     mode='w', encoding="utf-8") as f:
-            jdata = json.dumps(assessment_precision, sort_keys=True, indent=4, separators=(',', ': '))
-            f.write(unicode(jdata,"utf-8"))
+    # once all assessments have been added, print to json file
+    with io.open(os.path.join(out_dir, "Assessment_datasets.json"),
+                 mode='w', encoding="utf-8") as f:
+        jdata = json.dumps(ALL_ASSESSMENTS, sort_keys=True, indent=4, separators=(',', ': '))
+        f.write(unicode(jdata,"utf-8"))
 
 
 if __name__ == '__main__':

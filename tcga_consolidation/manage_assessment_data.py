@@ -37,7 +37,8 @@ def read_participant_data(participant_dir):
         if fnmatch.fnmatch(result_file, "*.json") and os.path.isfile(abs_result_file):
             with io.open(abs_result_file, mode='r', encoding="utf-8") as f:
                 result = json.load(f)
-                participant_data.setdefault(result['challenge_id'], []).append (abs_result_file)
+                for item in result:
+                    participant_data.setdefault(item['challenge_id'], []).append (item)
 
     return participant_data
 
@@ -64,19 +65,19 @@ def generate_manifest(data_dir,output_dir, participant_data):
 
                 # add new participant data to aggregation file
                 new_participant_data = {}
-                for ( abs_result_file) in metrics_file:
-                    with io.open(abs_result_file, mode='r', encoding="utf-8") as f:
-                        metrics_data = json.load(f)
-                        participant_id = metrics_data["participant_id"]
-                        if metrics_data["metrics"]["metric_id"] == metric_X:
-                            new_participant_data ["metric_x"] = metrics_data["metrics"]["value"]
-                        elif metrics_data["metrics"]["metric_id"] == metric_Y:
-                            new_participant_data ["metric_y"] = metrics_data["metrics"]["value"]
+                for metrics_data in metrics_file:
 
-                        # copy the assessment files to output directory
-                        rel_new_location = participant_id + ".json"
-                        new_location = os.path.join(cancer_dir, rel_new_location)
-                        shutil.copy(abs_result_file, new_location)
+                    participant_id = metrics_data["participant_id"]
+                    if metrics_data["metrics"]["metric_id"] == metric_X:
+                        new_participant_data ["metric_x"] = metrics_data["metrics"]["value"]
+                    elif metrics_data["metrics"]["metric_id"] == metric_Y:
+                        new_participant_data ["metric_y"] = metrics_data["metrics"]["value"]
+
+                # copy the assessment files to output directory
+                rel_new_location = participant_id + ".json"
+                new_location = os.path.join(cancer_dir, rel_new_location)
+                with open(new_location, 'w') as f:
+                    json.dump(metrics_file, f, sort_keys=True, indent=4, separators=(',', ': '))
 
                 new_participant_data["participant_id"] = participant_id
                 aggregation_file["datalink"]["inline_data"]["challenge_participants"].append(new_participant_data)
