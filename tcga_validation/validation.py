@@ -3,7 +3,7 @@ import pandas
 import os, json
 import sys
 from argparse import ArgumentParser
-import JSON_templates
+from JSON_templates import JSON_templates
 
 parser = ArgumentParser()
 parser.add_argument("-i", "--participant_data", help="list of cancer genes prediction", required=True)

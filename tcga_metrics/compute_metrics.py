@@ -5,7 +5,7 @@ import pandas
 import math
 import json
 from argparse import ArgumentParser
-import JSON_templates
+from JSON_templates import JSON_templates
 
 
 def main(args):
