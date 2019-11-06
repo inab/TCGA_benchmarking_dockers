@@ -1,0 +1,18 @@
+{
+    "_id": "TCGA:my_tool_P",
+    "challenge_ids": [
+        "ACC",
+        "BRCA",
+        "COAD"
+    ],
+    "community_id": "TCGA",
+    "datalink": {
+        "attrs": [
+            "archive"
+        ],
+        "status": "ok",
+        "validation_date": "2019-06-28T10:11:01"
+    },
+    "participant_id": "my_tool",
+    "type": "participant"
+}

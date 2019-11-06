@@ -1,12 +1,19 @@
 from __future__ import division, print_function
 import pandas
-import os
+import os, json
 import sys
 from argparse import ArgumentParser
+from JSON_templates import JSON_templates
 
 parser = ArgumentParser()
 parser.add_argument("-i", "--participant_data", help="list of cancer genes prediction", required=True)
+parser.add_argument("-com", "--community_name", help="name of benchmarking community", required=True)
+parser.add_argument("-c", "--cancer_types", nargs='+', help="list of types of cancer selected by the user, separated by spaces", required=True)
+parser.add_argument("-p", "--participant_name", help="name of the tool used for prediction", required=True)
 parser.add_argument("-r", "--public_ref_dir", help="directory with the list of cancer genes used to validate the predictions", required=True)
+parser.add_argument("-o", "--output", help="output path where participant JSON file will be written",
+                    required=True)
+
 args = parser.parse_args()
 
 
@@ -15,12 +22,24 @@ def main(args):
     # input parameters
     input_participant = args.participant_data
     public_ref_dir = args.public_ref_dir
+    community = args.community_name
+    challenges = args.cancer_types
+    participant_name = args.participant_name
+    out_path = args.output
 
-    validate_input_data(input_participant,  public_ref_dir)
+    # Assuring the output path does exist
+    if not os.path.exists(os.path.dirname(out_path)):
+        try:
+            os.makedirs(os.path.dirname(out_path))
+            with open(out_path, mode="a") : pass
+        except OSError as exc:
+            print("OS error: {0}".format(exc) + "\nCould not create output path: " + out_path)
+
+    validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_path)
 
 
 
-def validate_input_data(input_participant, public_ref_dir):
+def  validate_input_data(input_participant,  public_ref_dir, community, challenges, participant_name, out_path):
     # get participant predicted genes
     try:
         participant_data = pandas.read_csv(input_participant, sep='\t',
@@ -54,11 +73,20 @@ def validate_input_data(input_participant, public_ref_dir):
                 print("PARTIAL ERROR: Unable to properly process "+public_ref,file=sys.stderr)
                 import traceback
                 traceback.print_exc()
-            
+
+    data_id = community + ":" + participant_name + "_P"
+    output_json = JSON_templates.write_participant_dataset(data_id, community, challenges, participant_name, validated)
+
+    # print file
+
+    with open(out_path , 'w') as f:
+        json.dump(output_json, f, sort_keys=True, indent=4, separators=(',', ': '))
+
     if validated == True:
+
         sys.exit(0)
     else:
-        sys.exit("ERROR: Submitted data does not validate against any reference data!")
+        sys.exit("ERROR: Submitted data does not validate against any reference data! Please check " + out_path)
 
 
 if __name__ == '__main__':

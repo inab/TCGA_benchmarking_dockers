@@ -1,0 +1,194 @@
+[
+    {
+        "_id": "TCGA:my_tool_P",
+        "challenge_ids": [
+            "ACC",
+            "BRCA",
+            "COAD"
+        ],
+        "community_id": "TCGA",
+        "datalink": {
+            "attrs": [
+                "archive"
+            ],
+            "status": "ok",
+            "validation_date": "2019-06-28T10:11:01"
+        },
+        "participant_id": "my_tool",
+        "type": "participant"
+    },
+    {
+        "_id": "TCGA:ACC_TPR_my_tool_A",
+        "challenge_id": "ACC",
+        "community_id": "TCGA",
+        "metrics": {
+            "metric_id": "TPR",
+            "stderr": 0,
+            "value": 0.8333333333333334
+        },
+        "participant_id": "my_tool",
+        "type": "assessment"
+    },
+    {
+        "_id": "TCGA:ACC_precision_my_tool_A",
+        "challenge_id": "ACC",
+        "community_id": "TCGA",
+        "metrics": {
+            "metric_id": "precision",
+            "stderr": 0,
+            "value": 0.38461538461538464
+        },
+        "participant_id": "my_tool",
+        "type": "assessment"
+    },
+    {
+        "_id": "TCGA:BLCA_TPR_my_tool_A",
+        "challenge_id": "BLCA",
+        "community_id": "TCGA",
+        "metrics": {
+            "metric_id": "TPR",
+            "stderr": 0,
+            "value": 0.0625
+        },
+        "participant_id": "my_tool",
+        "type": "assessment"
+    },
+    {
+        "_id": "TCGA:BLCA_precision_my_tool_A",
+        "challenge_id": "BLCA",
+        "community_id": "TCGA",
+        "metrics": {
+            "metric_id": "precision",
+            "stderr": 0,
+            "value": 0.23076923076923078
+        },
+        "participant_id": "my_tool",
+        "type": "assessment"
+    },
+    {
+        "_id": "OEBD00100000NN",
+        "challenge_ids": [
+            "ACC"
+        ],
+        "datalink": {
+            "inline_data": {
+                "challenge_participants": [
+                    {
+                        "metric_x": 0.5,
+                        "metric_y": 0.75,
+                        "participant_id": "MutSig2CV"
+                    },
+                    {
+                        "metric_x": 0.3333333333333333,
+                        "metric_y": 1.0,
+                        "participant_id": "compositeDriver"
+                    },
+                    {
+                        "metric_x": 0.8333333333333334,
+                        "metric_y": 0.38461538461538464,
+                        "participant_id": "2020plus"
+                    },
+                    {
+                        "metric_x": 0.16666666666666666,
+                        "metric_y": 1.0,
+                        "participant_id": "OncodriveFM"
+                    },
+                    {
+                        "metric_x": 0.16666666666666666,
+                        "metric_y": 1.0,
+                        "participant_id": "ActiveDriver"
+                    },
+                    {
+                        "metric_x": 0.16666666666666666,
+                        "metric_y": 1.0,
+                        "participant_id": "e-Driver"
+                    },
+                    {
+                        "metric_x": 0.16666666666666666,
+                        "metric_y": 0.07142857142857142,
+                        "participant_id": "OncodriveCLUST"
+                    },
+                    {
+                        "metric_x": 0.3333333333333333,
+                        "metric_y": 1.0,
+                        "participant_id": "MuSiC"
+                    },
+                    {
+                        "metric_x": 0.8333333333333334,
+                        "metric_y": 0.38461538461538464,
+                        "participant_id": "my_tool"
+                    }
+                ],
+                "visualization": {
+                    "type": "2D-plot",
+                    "x_axis": "TPR",
+                    "y_axis": "precision"
+                }
+            }
+        },
+        "type": "aggregation"
+    },
+    {
+        "_id": "OEBD00100000NP",
+        "challenge_ids": [
+            "BLCA"
+        ],
+        "datalink": {
+            "inline_data": {
+                "challenge_participants": [
+                    {
+                        "metric_x": 0.7916666666666666,
+                        "metric_y": 0.7916666666666666,
+                        "participant_id": "MutSig2CV"
+                    },
+                    {
+                        "metric_x": 0.2916666666666667,
+                        "metric_y": 0.6666666666666666,
+                        "participant_id": "compositeDriver"
+                    },
+                    {
+                        "metric_x": 0.7916666666666666,
+                        "metric_y": 0.26573426573426573,
+                        "participant_id": "2020plus"
+                    },
+                    {
+                        "metric_x": 0.4583333333333333,
+                        "metric_y": 0.34375,
+                        "participant_id": "OncodriveFM"
+                    },
+                    {
+                        "metric_x": 0.020833333333333332,
+                        "metric_y": 0.14285714285714285,
+                        "participant_id": "ActiveDriver"
+                    },
+                    {
+                        "metric_x": 0.20833333333333334,
+                        "metric_y": 0.8333333333333334,
+                        "participant_id": "e-Driver"
+                    },
+                    {
+                        "metric_x": 0.0,
+                        "metric_y": 0.0,
+                        "participant_id": "OncodriveCLUST"
+                    },
+                    {
+                        "metric_x": 0.7083333333333334,
+                        "metric_y": 0.8095238095238095,
+                        "participant_id": "MuSiC"
+                    },
+                    {
+                        "metric_x": 0.0625,
+                        "metric_y": 0.23076923076923078,
+                        "participant_id": "my_tool"
+                    }
+                ],
+                "visualization": {
+                    "type": "2D-plot",
+                    "x_axis": "TPR",
+                    "y_axis": "precision"
+                }
+            }
+        },
+        "type": "aggregation"
+    }
+]
