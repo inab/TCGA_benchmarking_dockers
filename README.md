@@ -13,7 +13,7 @@ the predictions are compared with the 'Gold Standards' provided by the community
 performance metrics - precision (Positive Predictive Value) and recall(True Positive Rate). Those metrics are written
 into assessment datasets. In order to create datasets with structure compatible with the [Elixir
     Benchmarking Data Model](https://github.com/inab/benchmarking-data-model), please use the following [python module and JSON schema](./tcga_metrics/JSON_templates)
-3. [**Consolidation**](./tcga_assessment):
+3. [**Consolidation**](./tcga_consolidation):
 the benchmark itself is performed by merging the assessment metrics with the rest of TCGA data. The results are provided
 SVG format - scatter plot, and JSON format - aggregation/summary datasets, which are also compatible with the [Elixir
     Benchmarking Data Model](https://github.com/inab/benchmarking-data-model).
