@@ -2,6 +2,8 @@
 
 OpenEBench TCGA benchmarking Docker declarations, which define the architecture of benchmarking workflows to be implemented in OpenEBench.
 
+**NOTE for developers.** In order to make the workflow containers reproducible and stable in the long-term, make sure to use specific versions in the container base image (e.g.*ubuntu:16.04*, NOT *ubuntu:latest*).
+
 ## Structure
 Our benchmarking workflow structure is composed by three docker images / steps:
 1. [**Validation**](./tcga_validation):
