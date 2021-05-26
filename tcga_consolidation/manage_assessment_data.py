@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from __future__ import division
 import io
 import shutil
@@ -98,8 +100,7 @@ def generate_manifest(data_dir,output_dir, participant_data):
         info.append(obj)
 
     with io.open(os.path.join(output_dir, "Manifest.json"), mode='w', encoding="utf-8") as f:
-        jdata = json.dumps(info, f, sort_keys=True, indent=4, separators=(',', ': '))
-        f.write(unicode(jdata,"utf-8"))
+        json.dump(info, f, sort_keys=True, indent=4, separators=(',', ': '))
 
 
 if __name__ == '__main__':
