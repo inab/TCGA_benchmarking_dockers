@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from __future__ import division
 import io
 import os
@@ -100,7 +102,7 @@ def compute_metrics(input_participant,  gold_standards_dir, cancer_types, partic
     with io.open(out_path,
                  mode='w', encoding="utf-8") as f:
         jdata = json.dumps(ALL_ASSESSMENTS, sort_keys=True, indent=4, separators=(',', ': '))
-        f.write(unicode(jdata,"utf-8"))
+        f.write(jdata)
 
 
 if __name__ == '__main__':
