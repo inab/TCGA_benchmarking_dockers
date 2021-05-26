@@ -7,10 +7,12 @@ if [ $? -ne 0 ] ; then
 	exit 1
 fi
 
+set -e
 if [ $# -gt 0 ]; then
 	tag_id="$1"
 
 	for docker_name in tcga_validation tcga_metrics tcga_consolidation ; do
+		echo "Building ${docker_name}:${tag_id}"
 		docker build -t "$docker_name":"$tag_id" "$docker_name"
 	done
 else

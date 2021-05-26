@@ -30,4 +30,4 @@ Find more information about the TCGA Cancer Drivers Pipeline [here](https://gith
 
 
 ## Usage
-In order to build the Docker images locally, please run `./build.sh`
+In order to build the Docker images locally, please run `./build.sh 1.0.1`
