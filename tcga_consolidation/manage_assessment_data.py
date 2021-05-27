@@ -84,12 +84,12 @@ def generate_manifest(data_dir,output_dir, participant_data):
                 with open(summary_dir, 'w') as f:
                     json.dump(aggregation_file, f, sort_keys=True, indent=4, separators=(',', ': '))
 
-
-
-        # Let's draw the assessment charts!
-        assessment_chart.print_chart(cancer_dir, summary_dir,cancer, "RAW")
-        assessment_chart.print_chart(cancer_dir, summary_dir,cancer, "SQR")
-        assessment_chart.print_chart(cancer_dir, summary_dir,cancer, "DIAG")
+                # Let's draw the assessment charts!
+                assessment_chart.print_chart(cancer_dir, summary_dir, cancer, "RAW")
+                assessment_chart.print_chart(cancer_dir, summary_dir, cancer, "SQR")
+                assessment_chart.print_chart(cancer_dir, summary_dir, cancer, "DIAG")
+        else:
+            print("Skipping {} ({} not found)".format(cancer, cancer_oeb_data))
 
         #generate manifest
         obj = {
