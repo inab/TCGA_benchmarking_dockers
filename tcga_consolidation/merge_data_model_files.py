@@ -27,7 +27,7 @@ def main(args):
 
     data_model_file = join_json_files(participant_dir, data_model_file, "*.json")
     data_model_file = join_json_files(metrics_dir, data_model_file, "*.json")
-    data_model_file = join_json_files(aggregation_dir, data_model_file, "*_summary.json")
+    data_model_file = join_json_files(aggregation_dir, data_model_file, "*.json")
 
     # write the merged data model file to json output
     with open(out_path, mode='w', encoding="utf-8") as f:

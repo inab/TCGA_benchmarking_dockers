@@ -221,8 +221,10 @@ def print_chart(cancer_dir, summary_dir, cancer_type, classification_type):
     with io.open(summary_dir, mode='r', encoding="utf-8") as f:
         aggregation_file = json.load(f)
         for participant_data in aggregation_file["datalink"]["inline_data"]["challenge_participants"]:
-
-            tools.append(participant_data['participant_id'])
+            if "tool_id" in participant_data:
+                tools.append(participant_data['tool_id'])
+            elif "participant_id" in participant_data:
+                tools.append(participant_data['participant_id'])
             x_values.append(participant_data['metric_x'])
             y_values.append(participant_data['metric_y'])
 
