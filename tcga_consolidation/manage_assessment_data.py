@@ -31,7 +31,7 @@ def main(args):
         getOEBAggregations(response, data_dir)
     generate_manifest(data_dir, output_dir, participant_data)
 
-##get exist aggregation datasets for that challenges
+##get existing aggregation datasets for that challenges
 def query_OEB_DB(bench_event_id):
     json_query = {'query': """query AggregationQuery($bench_event_id: String) {
     getChallenges(challengeFilters: {benchmarking_event_id: $bench_event_id}) {
@@ -88,7 +88,11 @@ def getOEBAggregations(response, output_dir):
                 challenge['datasets'][0]['datalink']["inline_data"]["visualization"]["x_axis"] = metrics['orig_id'].split(":")[-1]
             elif metrics['metrics_id'] == challenge['datasets'][0]['datalink']["inline_data"]["visualization"]["y_axis"]:
                 challenge['datasets'][0]['datalink']["inline_data"]["visualization"]["y_axis"] = metrics['orig_id'].split(":")[-1]
-
+        
+        #replace tool_id for participant_id (for the visualitzation)
+        for i in challenge['datasets'][0]['datalink']['inline_data']['challenge_participants']:
+            i["participant_id"] = i.pop("tool_id")
+        
         new_aggregation = {
             "_id": challenge['datasets'][0]['_id'],
             "challenge_ids": [
@@ -209,10 +213,7 @@ def generate_manifest(data_dir,output_dir, participant_data):
 
         # add the rest of participants to manifest
         for name in aggregation_file["datalink"]["inline_data"]["challenge_participants"]:
-            if "tool_id" in name:
-                participants.append(name["tool_id"])
-            elif "participant_id" in name:
-                participants.append(name["participant_id"])
+            participants.append(name["participant_id"])
 
         #copy the updated aggregation file to output directory
         summary_dir = os.path.join(cancer_dir,cancer + ".json")
