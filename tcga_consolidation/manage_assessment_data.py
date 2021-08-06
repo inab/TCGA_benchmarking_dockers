@@ -7,6 +7,7 @@ import os
 import logging
 import sys
 from argparse import ArgumentParser
+import datetime
 from assessment_chart import assessment_chart
 
 DEFAULT_eventMark = '2018-04-05'
@@ -229,7 +230,8 @@ def generate_manifest(data_dir,output_dir, participant_data):
         #generate manifest
         obj = {
             "id" : cancer,
-            "participants": participants
+            "participants": participants,
+            'timestamp': datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
         }
 
         info.append(obj)
