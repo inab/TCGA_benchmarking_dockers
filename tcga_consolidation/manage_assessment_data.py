@@ -203,12 +203,7 @@ def generate_manifest(data_dir,output_dir, participant_data):
                 new_participant_data["metric_x"] = metrics_data["metrics"]["value"]
             elif metrics_data["metrics"]["metric_id"] == metric_Y:
                 new_participant_data["metric_y"] = metrics_data["metrics"]["value"]
-        # copy the assessment files to output directory
-        rel_new_location = participant_id + ".json"
-        new_location = os.path.join(cancer_dir, rel_new_location)
-        with open(new_location, mode='w', encoding="utf-8") as f:
-            json.dump(metrics_file, f, sort_keys=True, indent=4, separators=(',', ': '))
-
+        
         new_participant_data["participant_id"] = participant_id
         aggregation_file["datalink"]["inline_data"]["challenge_participants"].append(new_participant_data)
 
