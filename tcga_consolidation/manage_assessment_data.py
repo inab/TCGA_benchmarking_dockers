@@ -11,7 +11,7 @@ import datetime
 from assessment_chart import assessment_chart
 
 DEFAULT_eventMark = '2018-04-05'
-DEFAULT_OEB_API = "https://dev2-openebench.bsc.es/api/scientific/graphql"
+DEFAULT_OEB_API = "https://dev-openebench.bsc.es/api/scientific/graphql"
 DEFAULT_eventMark_id = "OEBE0010000000"
 METRICS =  {"precision":"OEBM0010000001", "TPR": "OEBM0010000002"}
 
